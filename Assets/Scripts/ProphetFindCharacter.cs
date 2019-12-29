@@ -2,19 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SingletonMono : MonoBehaviour
-{
-    public static SingletonMono Instace;
-    public void Awake()
-    {
-        if (Instace != this)
-        {
-            Instace = this;
-        }
-    }
-}
-
-
 namespace KSkill
 {
     public static class MathfMyMine
@@ -27,14 +14,40 @@ namespace KSkill
 
     }
 
-    public class FindCharacter : SingletonMono
+    public static class FindCharacter
     {
-        public List<ICharacter> FindAOECharacter(ICharacter caster, float Range = 1)
+        public static List<ICharacter> FindAOECharacter(ICharacter caster, float Range)
         {
-            return null;
+            return FindAOECharacter(caster, CCharacterManager.Instance.AllCharacter, Range);
         }
 
-        public ICharacter FindFarthestCharacter(ICharacter me, List<ICharacter> AllCharacter)
+
+        public static List<ICharacter> FindAOECharacter(ICharacter caster, List<ICharacter> AllCharacter, float Range = 1)
+        {
+            List<ICharacter> result = new List<ICharacter>();
+
+            Debug.LogError(AllCharacter.Count);
+            for (int i = 0; i < AllCharacter.Count; i++)
+            {
+                var Target = AllCharacter[i];
+                Debug.LogError(Target.IdTeam != caster.IdTeam);
+
+                if (Target.IdTeam != caster.IdTeam && Target.Equals(caster) == false)
+                {
+                    if (MathfMyMine.Distance(caster, Target) <= Range)
+                    {
+                        result.Add(Target);
+                    }
+                }
+            }
+
+            if (result.Count == 0)
+                return null;
+
+            return result;
+        }
+
+        public static ICharacter FindFarthestCharacter(ICharacter me, List<ICharacter> AllCharacter)
         {
             ICharacter Character = null;
             float Max = 0;
@@ -50,7 +63,7 @@ namespace KSkill
 
             return Character;
         }
-        public ICharacter FindNearestCharacter(ICharacter me, List<ICharacter> AllCharacter, float range)
+        public static ICharacter FindNearestCharacter(ICharacter me, List<ICharacter> AllCharacter, float range)
         {
             ICharacter CharacterNearest = null;
             float Min = 0;

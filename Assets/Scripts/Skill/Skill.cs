@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class A
-{
-    public int t = 1;
-}
 
 
 [System.Flags]
@@ -25,14 +21,26 @@ public enum EDeBuff
     Freeze = 1 << 4,
 }
 
+public interface ICastingSkill
+{
+    float StartCasting();
+    void Casting();
+    void EndCasting();
+}
+
+public interface IPerformSkill
+{
+    float StartPerform();
+    void Performing();
+    void EndPerform();
+}
+
 public class Skill : MonoBehaviour
 {
-    public A a = new A(), b = new A();
-
     // Start is called before the first frame update
     void Start()
     {
-        Debug.LogError(a.GetHashCode().ToString() + "|" + b.GetHashCode().ToString());
+        
     }
 
     // Update is called once per frame

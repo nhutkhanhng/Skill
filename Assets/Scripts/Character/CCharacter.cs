@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using KSkill;
-public class CCharacter : MonoBehaviour, KSkill.ICharacter, ISkillFunction
+public partial class CCharacter : MonoBehaviour, ICharacter, ISkillFunction
 {
+    public bool isPlayer;
+
     public float MaxHP = 100;
     [SerializeField]
     protected float _currentHP;
@@ -13,7 +15,7 @@ public class CCharacter : MonoBehaviour, KSkill.ICharacter, ISkillFunction
         get { return _currentHP; }
         set
         {
-            _currentHP = value;
+            _currentHP = value;    
         }
     }
 
@@ -28,7 +30,7 @@ public class CCharacter : MonoBehaviour, KSkill.ICharacter, ISkillFunction
     {
         get
         {
-            return this.CurrentHp / MaxHP * 100;
+            return this.CurrentHp / MaxHP   ;
         }
     }
 
@@ -40,19 +42,37 @@ public class CCharacter : MonoBehaviour, KSkill.ICharacter, ISkillFunction
         }
     }
 
+    [SerializeField]
+    private byte _IdTeam;
+    
+    public byte IdTeam
+    {
+        get { return _IdTeam; }
+        set { _IdTeam = value; }
+    }
+
     public AbilityController _Ability;
 
-    // Start is called before the first frame update
+    private void Awake()
+    {
+        CCharacterManager.Instance.AllCharacter.Add(this);
+    }
+    // Start is called before the first frame upda  te
     void Start()
     {
-        _Ability.controller = this;
-        _Ability.Init();
+        if (_Ability)
+        {
+            _Ability.controller = this;
+            _Ability.Init();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        _Ability.DoUpdate();
+        if (_Ability)
+            _Ability.DoUpdate();
+
         if (Input.GetKeyDown(KeyCode.K))
         {
             this.CurrentHp = 5;

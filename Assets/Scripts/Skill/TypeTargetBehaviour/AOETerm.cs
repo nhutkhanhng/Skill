@@ -7,9 +7,10 @@ namespace KSkill
     [CreateAssetMenu(menuName = "KSkill/TargetBehaviour/AOE")]
     public class AOETerm : TargetBehaviour
     {
+        public float Range;
         public override List<ICharacter> Func(ICharacter Caster)
         {
-            return null;
+            return FindCharacter.FindAOECharacter(Caster, Range);
         }
     }
 }

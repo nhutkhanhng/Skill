@@ -16,6 +16,8 @@ namespace KSkill
         float CurrentHpPercent { get; }
 
         ISkillFunction SkillFunction { get; }
+
+        byte IdTeam { get; set; }
     }
 
     public interface ISkillController

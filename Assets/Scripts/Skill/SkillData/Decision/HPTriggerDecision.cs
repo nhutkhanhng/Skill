@@ -20,8 +20,7 @@ namespace KSkill
 
         public override bool Decide(ICharacter controller)
         {
-            Debug.LogError(Mathf.Sign(controller.CurrentHpPercent - Percent));
-            return Mathf.Sign(controller.CurrentHpPercent - Percent) != ((float)this.Relative);
+            return Mathf.Sign(controller.CurrentHpPercent - Percent) == ((float)this.Relative);
         }
     }
 }

@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5d4af07a3ecd3fe4aa3f5c3429623f9d, type: 3}
-  m_Name: BuffHP
+  m_Name: '[Action]BuffHP'
   m_EditorClassIdentifier: 
   HP: 500

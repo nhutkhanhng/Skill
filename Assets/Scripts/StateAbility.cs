@@ -19,11 +19,19 @@ namespace KSkill
         public StateAbility falseState;
     }
 
+
+    /// <summary>
+    /// Cái class này hoạt động như sau
+    /// Check 
+    /// </summary>
     [CreateAssetMenu(menuName = "KSkill/State")]
     public class StateAbility : ScriptableObject, IFSM
     {
+        protected ICharacter controller;
         public TargetBehaviour targetFinder;
-        public List<Action> Action;
+        public List<Action> Actions;
+
+        [Header("Condition to change state of skill")]
         public List<Transition> Transitions;
 
         public delegate void ChangeState(AbilityController controller);
@@ -58,9 +66,22 @@ namespace KSkill
             // Do Something
         }
 
+        public void EnterState(ICharacter controller)
+        {
+            this.controller = controller;
+            EnterState();
+        }
         public void EnterState()
         {
+            Debug.LogError("EnterState");
 
+            if(this.Actions.Available())
+            {
+                for(int i = 0; i < this.Actions.Count; i++)
+                {
+                    this.Actions[i].Act(this.controller, this.targetFinder);
+                }
+            }
         }
 
         public void Procesing()

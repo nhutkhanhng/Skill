@@ -10,7 +10,7 @@ namespace KSkill
     {
         public override List<ICharacter> Func(ICharacter Caster)
         {
-            return null;
+            return new List<ICharacter>() { Caster };
         }
     }
 }

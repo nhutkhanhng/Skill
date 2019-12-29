@@ -4,6 +4,13 @@ using UnityEngine;
 
 using KSkill;
 
+public enum EConditionTransition : byte
+{
+    NONE = 0,
+    OR = 1,
+    AND = 2,
+
+}
 [System.Serializable]
 public class AbilityController : MonoBehaviour, ISkillController
 {
@@ -25,16 +32,18 @@ public class AbilityController : MonoBehaviour, ISkillController
     public void TransitionToState(StateAbility state)
     {
         currentState = state;
-        state.Initialize(controller);
+        currentState.EnterState(controller);
     }
     public Transition CheckTransition(ICharacter controller)
     {
+        int decisionSucceeded = 0;
         for (int i = 0; i < currentState.Transitions.Count; i++)
         {
-            bool decisionSucceeded = currentState.Transitions[i].decision.Decide(controller);
+             decisionSucceeded += currentState.Transitions[i].decision.Decide(controller) ? 1 : 0;
 
-            if (decisionSucceeded)
+            if (decisionSucceeded > 0)
                 return currentState.Transitions[i];
+
         }
 
         return null;
@@ -46,7 +55,6 @@ public class AbilityController : MonoBehaviour, ISkillController
         if (transition != null)
         {
             callback?.Invoke();
-
             TransitionToState(transition.trueState);
         }
     }
