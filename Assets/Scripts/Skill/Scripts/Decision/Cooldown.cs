@@ -8,6 +8,7 @@ namespace KSkill
     [CreateAssetMenu(menuName = "KSkill/Decision/CoolDown")]
     public class Cooldown : Decision
     {
+        public float CooldownTime = 10f;
         public override bool Decide(ICharacter controller)
         {
             return false;

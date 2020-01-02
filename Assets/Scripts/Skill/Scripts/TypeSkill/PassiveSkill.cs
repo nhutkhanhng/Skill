@@ -14,6 +14,11 @@ namespace KSkill {
         {            
         }
 
+        public override void ExecuteEnterState()
+        {
+            
+        }
+
         public override void ExitState()
         {
         }

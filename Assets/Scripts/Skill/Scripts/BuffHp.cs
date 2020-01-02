@@ -9,17 +9,13 @@ namespace KSkill
     public class BuffHp : Action
     {
         public float HP = 500;
-        public override void Act(ICharacter controller, TargetBehaviour targetBehaviour)
+        public override void Act(ICharacter controller, List<ICharacter> targetBehaviour)
         {
-            var list = targetBehaviour.Func(controller);
-
-            if (list.Available())
+            if (targetBehaviour.Available())
             {
-                foreach (var target in list)
+                foreach (var target in targetBehaviour)
                 {
                     target.SkillFunction.ReceiveBuffHP(this.HP);
-
-                    Debug.LogError(target.ToString());
                 }
             }
         }

@@ -45,42 +45,21 @@ public class Example
 }
 
 [System.Serializable]
-public class AbilityController : MonoBehaviour, ISkillController
+public class AbilityController : MonoBehaviour, ISkillController, ICastingSkill, IPerformSkill
 {
     public ICharacter controller;
-    public StateAbility currentState;
+    #region Ability Executor
+    public Ability currentState;
+    [Space]
+    [Header("--------------------- Init --------------------- ")]
+    [SerializeField] private Ability _InitState;
     // Start is called before the first frame update
-    public StateAbility InitState;
-    public StateAbility endState;
+    [HideInInspector] public Ability InitState;
+    public Ability endState;
 
-    public void Test()
-    {
-        ////ICharacter controller = new ICharacter();
-        //Type myType = typeof(ICharacter);
-
-        //PropertyInfo[] allproperties = myType.GetProperties();
-
-        //foreach(var pro in allproperties)
-        //{
-        //    Debug.LogError(pro.PropertyType.GetTypeInfo());
-        //}
-        //PropertyInfo myFieldInfo = myType.GetProperty("IdTeam"
-        //    /*,BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public*/);
-
-        //// Display the string before applying SetValue to the field.
-        //Debug.Log(string.Format("\nThe field value of myString is \"{0}\".",
-        //myFieldInfo.GetValue(controller)));
-        //// Display the SetValue signature used to set the value of a field.
-        //Debug.Log("Applying SetValue(Object, Object).");
-
-        //// Change the field value using the SetValue method. 
-        //myFieldInfo.SetValue(controller, Convert.ChangeType(10, myFieldInfo.PropertyType.GetTypeInfo().AsType()));
-        //// Display the string after applying SetValue to the field.
-        //Debug.Log(string.Format("The field value of mystring is \"{0}\".",
-        //    myFieldInfo.GetValue(controller)));
-    }
     public void Init()
     {
+        InitState = UnityEngine.Object.Instantiate(_InitState);
         TransitionToState(InitState);
     }
     public void OnExitState()
@@ -88,21 +67,24 @@ public class AbilityController : MonoBehaviour, ISkillController
         
     }
 
-    public void TransitionToState(StateAbility state)
+    public void TransitionToState(Ability state)
     {
         currentState = state;
-        if (currentState)
+        if (currentState != null)
             currentState.EnterState(controller);
     }
     public Transition CheckTransition(ICharacter controller)
     {
         int decisionSucceeded = 0;
-        for (int i = 0; i < currentState.Transitions.Count; i++)
+        if (this.currentState.Transitions.Available())
         {
-            decisionSucceeded += currentState.Transitions[i].IsTrue ? 1 : 0;
+            for (int i = 0; i < currentState.Transitions.Count; i++)
+            {
+                decisionSucceeded += currentState.Transitions[i].IsTrue ? 1 : 0;
 
-            if (decisionSucceeded > 0)
-                return currentState.Transitions[i];
+                if (decisionSucceeded > 0)
+                    return currentState.Transitions[i];
+            }
         }
 
         return null;
@@ -122,5 +104,44 @@ public class AbilityController : MonoBehaviour, ISkillController
     {
         currentState?.DoUpdate(this.controller);
         TransitionToState(this.controller, null);
+    }
+    #endregion
+    private void Update()
+    {
+        DoUpdate();
+    }
+    public void TransitionToState(StateAbility state)
+    {
+        
+    }
+
+    public float StartCasting()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Casting()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void EndCasting()
+    {
+        throw new NotImplementedException();
+    }
+
+    public float StartPerform()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Performing()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void EndPerform()
+    {
+        throw new NotImplementedException();
     }
 }

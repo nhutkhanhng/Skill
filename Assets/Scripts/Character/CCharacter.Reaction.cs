@@ -43,4 +43,6 @@ public partial class CCharacter
     public event Action OnUpdateCommandSkillUI;
     public event Action OnLockActiveSkill;
     public event Action OnUnlockActiveSkill;
+
+    public event Action OnCC;
 }

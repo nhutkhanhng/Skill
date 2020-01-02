@@ -9,11 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dad37cecfcdf9a046b029f2fa98801f8, type: 3}
-  m_Name: '[Attribute]Changed'
+  m_Script: {fileID: 11500000, guid: dc6fa977abc79bb4f84e7fe525648947, type: 3}
+  m_Name: Cooldown
   m_EditorClassIdentifier: 
-  PropertiesChanged:
-  - PropertiesName: IdTeam
-    NewValue: 20
-  - PropertiesName: Tested
-    NewValue: 100

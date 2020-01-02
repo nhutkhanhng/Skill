@@ -12,6 +12,13 @@ namespace KSkill
         void ExitState();
     }
 
+    public enum EState
+    {
+        Init = 0,
+        Enter = 1,
+        Processing = 2,
+        ExiState = 3,
+    }
     
     [System.Serializable]
     public class Transition
@@ -70,7 +77,6 @@ namespace KSkill
         public override void WhenTriggerIsTrue(ICharacter controller)
         {
             CountTriggerIsTrue++;
-            Debug.LogError("EE");
             if (condition == TypeCondition.AND)
             {
                 if (CountTriggerIsTrue == Triggers.Count)
@@ -109,16 +115,6 @@ namespace KSkill
         }
     }
 
-
-    public abstract class Ability : ScriptableObject, IFSM
-    {
-        public abstract void EnterState();
-
-        public abstract void ExitState();
-
-        public abstract void Procesing();
-    }
-
     /// <summary>
     /// Cái class này hoạt động như sau
     /// Check 
@@ -126,94 +122,26 @@ namespace KSkill
     [CreateAssetMenu(menuName = "KSkill/State")]
     public class StateAbility : Ability
     {
-        protected ICharacter controller;
-
         #region Execute
+        [Header("Find target for Buff")]
         public TargetBehaviour targetFinder;
+        [Header("Action Buff")]
         public List<Action> Actions;
         #endregion
-
-
-        #region Transition handler
-        [Header("Condition to change state of skill")]
-        public List<TransitionTrigger> Transitions;
-
-        public delegate void ChangeState(AbilityController controller);
-        public ChangeState TransitionToChangeState;
-
-        //public Transition CheckTransition(ICharacter controller)
-        //{
-        //    for (int i = 0; i < Transitions.Count; i++)
-        //    {
-        //        bool decisionSucceeded = Transitions[i].decision.Decide(controller);
-
-        //        if (decisionSucceeded)
-        //            return Transitions[i];
-        //    }
-
-        //    return null;
-        //}
-        //public void TransitionToState(ICharacter controller, System.Action callback = null)
-        //{
-        //    if (CheckTransition(controller) != null)
-        //    {
-        //        callback?.Invoke();
-        //    }
-        //}
-
-        #endregion
-
-        public void Initialize(ICharacter controller)
-        {
-            this.controller = controller;
-
-            if (Transitions.Available())
-            {
-                foreach(var trans in Transitions)
-                {
-                    trans.Init(controller);
-                }
-            }
-        }
-        public void TriggerAbility() { }
-
-        public void DoUpdate(ICharacter controller)
-        {
-            // TransitionToState(controller);
-
-            // Do Something
-        }
-
-        public void EnterState(ICharacter controller)
-        {
-            Initialize(controller);
-
-            EnterState();
-        }
 
         /// <summary>
         /// enter --> processing --> exit
         /// </summary>
         #region State - 
-        public override void EnterState()
+        public override void ExecuteEnterState()
         {
             if (this.Actions.Available())
             {
                 for (int i = 0; i < this.Actions.Count; i++)
                 {
-                    this.Actions[i].Act(this.controller, this.targetFinder);
+                    this.Actions[i].Act(this.controller, this.targetFinder.Func(this.controller));
                 }
             }
-        }
-
-        public override void Procesing()
-        {
-
-        }
-
-        public override void ExitState()
-        {
-
         }
 
         #endregion

@@ -21,24 +21,30 @@ namespace KSkill
     {
         public List<AttributeToChange> PropertiesChanged = new List<AttributeToChange>();
 
-        public override void Act(ICharacter controller, TargetBehaviour targetBehaviour)
+        public override void Act(ICharacter controller, List<ICharacter> targetBehaviour)
         {
-            foreach(var attribute in PropertiesChanged)
+            if (targetBehaviour.Available())
             {
-                ChangedProperties(controller, attribute.PropertiesName, attribute.NewValue);
+                for (int i = 0; i < targetBehaviour.Count; i++)
+                {                    
+                    foreach (var attribute in PropertiesChanged)
+                    {
+                        ChangedProperties(targetBehaviour[i], attribute.PropertiesName, attribute.NewValue);
+                    }
+                }
             }
         }
 
         // Start is called before the first frame update
-        protected void ChangedProperties(ICharacter controller, string propertiesName, object newValue)
+        protected void ChangedProperties(ICharacter target, string propertiesName, object newValue)
         {
             Type myType = typeof(ICharacter);
 
-            PropertyInfo myFieldInfo = myType.GetProperty("IdTeam"
+            PropertyInfo myFieldInfo = myType.GetProperty(propertiesName
                 /*,BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public*/);
 
             // Change the field value using the SetValue method. 
-            myFieldInfo.SetValue(controller, Convert.ChangeType(newValue, myFieldInfo.PropertyType.GetTypeInfo().AsType()));
+            myFieldInfo.SetValue(target, Convert.ChangeType(newValue, myFieldInfo.PropertyType.GetTypeInfo().AsType()));
 
         }
     }

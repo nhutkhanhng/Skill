@@ -80,8 +80,6 @@ public partial class CCharacter : MonoBehaviour, ICharacter, ISkillFunction
         {
             _Ability.controller = this;
             _Ability.Init();
-
-            _Ability.Test();
         }
     }
 

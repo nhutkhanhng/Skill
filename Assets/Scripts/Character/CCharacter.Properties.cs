@@ -4,7 +4,7 @@ using UnityEngine;
 
 public partial class CCharacter
 {
-    protected int _Fury;
+    [SerializeField] protected int _Fury;
     public void OnFuryChanged() { }
     public int Fury
     {

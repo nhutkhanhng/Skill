@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[System.Serializable]
 public class LinearTrajectory : KTrajectory
 {
     public override Vector3 Calculate(float dt)

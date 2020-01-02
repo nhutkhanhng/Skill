@@ -12,18 +12,7 @@ namespace KSkill
     [CreateAssetMenu(menuName = "KSkill/TriggerSkill")]
     public class TriggerSkill : Ability
     {
-        protected ICharacter controller;
-
-
-        #region Transition handler
-        [Header("Condition to change state of skill")]
-        public List<TransitionTrigger> Transitions;
-
-        public delegate void ChangeState(AbilityController controller);
-        public ChangeState TransitionToChangeState;
-        #endregion
-
-        public void Initialize(ICharacter controller)
+        public override void Initialize(ICharacter controller)
         {
             this.controller = controller;
 
@@ -35,22 +24,6 @@ namespace KSkill
                 }
             }
         }
-        public void TriggerAbility() { }
-
-        public void DoUpdate(ICharacter controller)
-        {
-            // TransitionToState(controller);
-
-            // Do Something
-        }
-
-        public void EnterState(ICharacter controller)
-        {
-            Initialize(controller);
-
-            EnterState();
-        }
-
 
         public override void EnterState()
         {
@@ -65,6 +38,11 @@ namespace KSkill
         public override void Procesing()
         {
             
+        }
+
+        public override void ExecuteEnterState()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
