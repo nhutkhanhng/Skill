@@ -153,7 +153,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 0
-  MaxHP: 100
   _currentHP: 50
   _IdTeam: 1
   _Ability: {fileID: 0}
@@ -263,7 +262,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 0
-  MaxHP: 100
   _currentHP: 50
   _IdTeam: 1
   _Ability: {fileID: 0}
@@ -576,7 +574,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 1
-  MaxHP: 100
   _currentHP: 59
   _IdTeam: 0
   _Ability: {fileID: 785374749}
@@ -686,7 +683,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 0
-  MaxHP: 100
   _currentHP: 50
   _IdTeam: 1
   _Ability: {fileID: 0}
@@ -796,7 +792,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 0
-  MaxHP: 100
   _currentHP: 50
   _IdTeam: 1
   _Ability: {fileID: 0}

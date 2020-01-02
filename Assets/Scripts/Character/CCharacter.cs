@@ -3,11 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using KSkill;
+using System;
+
+
+public enum ECharacterRole : int
+{
+    DamageDealer = 0,
+    Nuker = 1,
+    Supporter = 2,
+    Tanker = 3
+}
+
 public partial class CCharacter : MonoBehaviour, ICharacter, ISkillFunction
 {
     public bool isPlayer;
 
-    public float MaxHP = 100;
     [SerializeField]
     protected float _currentHP;
     public float CurrentHp
@@ -15,7 +25,8 @@ public partial class CCharacter : MonoBehaviour, ICharacter, ISkillFunction
         get { return _currentHP; }
         set
         {
-            _currentHP = value;    
+            _currentHP = value;
+            OnHpChanged();
         }
     }
 
@@ -57,6 +68,11 @@ public partial class CCharacter : MonoBehaviour, ICharacter, ISkillFunction
     {
         CCharacterManager.Instance.AllCharacter.Add(this);
     }
+
+    public bool IsAlive()
+    {
+        return true;
+    }
     // Start is called before the first frame upda  te
     void Start()
     {
@@ -64,6 +80,8 @@ public partial class CCharacter : MonoBehaviour, ICharacter, ISkillFunction
         {
             _Ability.controller = this;
             _Ability.Init();
+
+            _Ability.Test();
         }
     }
 
@@ -82,5 +100,12 @@ public partial class CCharacter : MonoBehaviour, ICharacter, ISkillFunction
     public void ReceiveBuffHP(float HP)
     {
         this.CurrentHp += HP;
+    }
+
+
+
+    public void OnHpChanged()
+    {
+        OnHPChange?.Invoke();
     }
 }

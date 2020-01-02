@@ -10,8 +10,6 @@ namespace KSkill
         {
             return Vector3.Distance(me.Position, target.Position);
         }
-
-
     }
 
     public static class FindCharacter
@@ -26,11 +24,9 @@ namespace KSkill
         {
             List<ICharacter> result = new List<ICharacter>();
 
-            Debug.LogError(AllCharacter.Count);
             for (int i = 0; i < AllCharacter.Count; i++)
             {
                 var Target = AllCharacter[i];
-                Debug.LogError(Target.IdTeam != caster.IdTeam);
 
                 if (Target.IdTeam != caster.IdTeam && Target.Equals(caster) == false)
                 {

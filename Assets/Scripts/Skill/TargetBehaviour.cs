@@ -18,6 +18,14 @@ namespace KSkill
         ISkillFunction SkillFunction { get; }
 
         byte IdTeam { get; set; }
+
+        bool IsAlive();
+
+        #region Properties
+        int Fury { get; set; }
+        int MaxHP { get; set; }
+        
+        #endregion
     }
 
     public interface ISkillController

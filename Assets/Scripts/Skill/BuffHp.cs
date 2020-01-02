@@ -2,23 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-using KSkill;
-
-
-[CreateAssetMenu(menuName = "KSkill/Action/BuffHP")]
-public class BuffHp : Action
+namespace KSkill
 {
-    public float HP = 500;
-    public override void Act(ICharacter controller, TargetBehaviour targetBehaviour)
-    {
-        var list = targetBehaviour.Func(controller);
 
-        if (list.Available())
+    [CreateAssetMenu(menuName = "KSkill/Action/BuffHP")]
+    public class BuffHp : Action
+    {
+        public float HP = 500;
+        public override void Act(ICharacter controller, TargetBehaviour targetBehaviour)
         {
-            foreach (var target in list)
+            var list = targetBehaviour.Func(controller);
+
+            if (list.Available())
             {
-                target.SkillFunction.ReceiveBuffHP(this.HP);
+                foreach (var target in list)
+                {
+                    target.SkillFunction.ReceiveBuffHP(this.HP);
+
+                    Debug.LogError(target.ToString());
+                }
             }
         }
     }
+
 }
