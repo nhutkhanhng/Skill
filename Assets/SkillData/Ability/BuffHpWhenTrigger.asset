@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fec05e99f4637d47a08ca3fdb5d5eff, type: 3}
+  m_Name: BuffHpWhenTrigger
+  m_EditorClassIdentifier: 
+  Interups: []
+  Transitions:
+  - TrueState: {fileID: 11400000, guid: ad694e87f5cc0e2499223b60dc57ab4e, type: 2}
+    FalseState: {fileID: 0}
+    condition: 2
+    Triggers:
+    - {fileID: 11400000, guid: b5de27ceb838d574386410111086bd8f, type: 2}
+  targetFinder: {fileID: 11400000, guid: 8546374af45a99e4ebb599922c8eb6a7, type: 2}
+  Actions: []
