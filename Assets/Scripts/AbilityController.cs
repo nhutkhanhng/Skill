@@ -73,7 +73,7 @@ public class AbilityController : MonoBehaviour, ISkillController, ICastingSkill,
         if (currentState != null)
             currentState.EnterState(controller);
     }
-    public Transition CheckTransition(ICharacter controller)
+    public TransitionTrigger CheckTransition(ICharacter controller)
     {
         int decisionSucceeded = 0;
         if (this.currentState.Transitions.Available())

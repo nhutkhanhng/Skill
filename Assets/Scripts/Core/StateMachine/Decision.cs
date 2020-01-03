@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace KSkill
 {
-    public abstract class Decision : ScriptableObject
+    public abstract class Decision<Target> : ScriptableObject
     {
         //public abstract void Init(ICharacter controller);
-        public abstract bool Decide(ICharacter controller);
+        public abstract bool Decide(Target controller);
         //public abstract void Destroy(ICharacter controller);
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace KSkill
 {
 
-    [System.Serializable]
+    [System.Serializable]   
     public abstract class Ability : ScriptableObject, IFSM
     {
         public ICharacter controller;

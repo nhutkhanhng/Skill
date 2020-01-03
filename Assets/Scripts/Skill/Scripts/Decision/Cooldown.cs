@@ -6,7 +6,7 @@ using UnityEngine;
 namespace KSkill
 {
     [CreateAssetMenu(menuName = "KSkill/Decision/CoolDown")]
-    public class Cooldown : Decision
+    public class Cooldown : Decision<ICharacter>
     {
         public float CooldownTime = 10f;
         public override bool Decide(ICharacter controller)

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace KSkill
 {
     [CreateAssetMenu(menuName = "KSkill/Decision/HPTriggerDecision")]
-    public class HPTriggerDecision : DecisionTrigger
+    public class HPTriggerDecision : DecisionTrigger<ICharacter>
     {
         [SerializeField]
         public enum RelativeHP

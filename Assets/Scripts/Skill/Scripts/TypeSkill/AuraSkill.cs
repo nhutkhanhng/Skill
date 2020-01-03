@@ -9,7 +9,7 @@ namespace KSkill
     [CreateAssetMenu(menuName = "KSkill/Passive")]
     public class AuraSkill : Ability
     {
-        public Transition _Transition;
+        public Transition<ICharacter, Ability> _Transition;
 
         public override void EnterState()
         {
