@@ -12,7 +12,7 @@ public partial class CCharacter
         set { _Fury = value;  OnFuryChanged(); }
     }
 
-    protected int maxHP;
+    [SerializeField] protected int maxHP;
     /// <summary>
     /// Khai báo callback ở trong hàm này.
     /// </summary>

@@ -78,7 +78,7 @@ public partial class CCharacter : MonoBehaviour, ICharacter, ISkillFunction
     {
         if (_Ability)
         {
-            _Ability.controller = this;
+            _Ability._Owner = this;
             _Ability.Init();
         }
     }
@@ -87,7 +87,7 @@ public partial class CCharacter : MonoBehaviour, ICharacter, ISkillFunction
     void Update()
     {
         if (_Ability)
-            _Ability.DoUpdate();
+            _Ability.DoUpdate(Time.deltaTime);
 
         if (Input.GetKeyDown(KeyCode.K))
         {

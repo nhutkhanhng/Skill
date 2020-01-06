@@ -45,9 +45,10 @@ public class Example
 }
 
 [System.Serializable]
-public class AbilityController : MonoBehaviour, ISkillController, ICastingSkill, IPerformSkill
+public class AbilityController : MonoBehaviour
 {
-    public ICharacter controller;
+    // Owner có thể null
+    public ICharacter _Owner;
     #region Ability Executor
     public Ability currentState;
     [Space]
@@ -60,88 +61,63 @@ public class AbilityController : MonoBehaviour, ISkillController, ICastingSkill,
     public void Init()
     {
         InitState = UnityEngine.Object.Instantiate(_InitState);
-        TransitionToState(InitState);
+        ChangeToState(InitState);
     }
-    public void OnExitState()
+    public void OnEnd()
     {
-        
+        Debug.LogError("Ended");
     }
 
-    public void TransitionToState(Ability state)
+    /// <summary>
+    /// Cái này được State gọi đến phục thuộc vào Transition/TransitionTrigger
+    /// </summary>
+    /// <param name="state"></param>
+    public void ChangeToState(Ability state)
     {
+        if(currentState != null)
+        {
+            currentState.Exit(this);
+        }
+        Debug.LogError("Change State");
+
         currentState = state;
         if (currentState != null)
-            currentState.EnterState(controller);
-    }
-    public Transition CheckTransition(ICharacter controller)
-    {
-        int decisionSucceeded = 0;
-        if (this.currentState.Transitions.Available())
-        {
-            for (int i = 0; i < currentState.Transitions.Count; i++)
-            {
-                decisionSucceeded += currentState.Transitions[i].IsTrue ? 1 : 0;
+            currentState.EnterState(this);
 
-                if (decisionSucceeded > 0)
-                    return currentState.Transitions[i];
+        if(currentState == null)
+        {
+            OnEnd();
+        }
+    }
+
+    public void TransitionToState(System.Action callback = null)
+    {
+        if (this.currentState != null)
+        {
+            var transition = this.currentState.CheckTransition(this._Owner);
+
+            if (transition != null)
+            {
+                callback?.Invoke();
+                ChangeToState(transition.TrueState);
             }
         }
-
-        return null;
     }
-    public void TransitionToState(ICharacter controller, System.Action callback = null)
-    {
-        var transition = CheckTransition(controller);
 
-        if (transition != null)
+    public void DoUpdate(float deltime)
+    {
+        if (currentState != null)
         {
-            callback?.Invoke();
-            TransitionToState(transition.TrueState);
-        }
-    }
+            currentState.DoUpdate(this, deltime);
+            TransitionToState();
 
-    public void DoUpdate()
-    {
-        currentState?.DoUpdate(this.controller);
-        TransitionToState(this.controller, null);
+            if (currentState.IsCompleted)
+                ChangeToState(null);
+        }
     }
     #endregion
     private void Update()
     {
-        DoUpdate();
-    }
-    public void TransitionToState(StateAbility state)
-    {
-        
-    }
-
-    public float StartCasting()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Casting()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void EndCasting()
-    {
-        throw new NotImplementedException();
-    }
-
-    public float StartPerform()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Performing()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void EndPerform()
-    {
-        throw new NotImplementedException();
+        DoUpdate(Time.deltaTime);
     }
 }

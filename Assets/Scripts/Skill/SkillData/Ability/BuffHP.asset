@@ -9,11 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fec05e99f4637d47a08ca3fdb5d5eff, type: 3}
-  m_Name: DoSkill
+  m_Script: {fileID: 11500000, guid: 88b4e7a1db687084b96c945ee3175ca8, type: 3}
+  m_Name: BuffHP
   m_EditorClassIdentifier: 
-  Interups: []
-  Transitions: []
-  targetFinder: {fileID: 11400000, guid: 8546374af45a99e4ebb599922c8eb6a7, type: 2}
-  Actions:
-  - {fileID: 11400000, guid: 4b82c0c745a8dd14b8ebe9ef6d2a83ce, type: 2}
+  CurrentState: 0
+  Interupts: []
+  Actions: []

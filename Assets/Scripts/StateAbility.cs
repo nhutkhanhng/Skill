@@ -32,17 +32,17 @@ namespace KSkill
         [Header("Hiện tại chưa dùng đâu")]
         public StateAbility FalseState;
 
-        public virtual void Init(ICharacter controler)
+        public virtual void Init(AbilityController controler)
         {
 
         }
 
-        public virtual void Exit(ICharacter controller)
+        public virtual void Exit(AbilityController controller)
         {
             
         }
 
-        public virtual void WhenTriggerIsTrue(ICharacter controller)
+        public virtual void WhenTriggerIsTrue(AbilityController controller)
         {
 
         }
@@ -66,15 +66,17 @@ namespace KSkill
 
         [Header("Add | OR bit condition")]
         public TypeCondition condition;
-        public List<DecisionTrigger> Triggers;
+        public List<SkillDecisionTrigger> Triggers;
 
-        public void TransitionToState(ICharacter controller)
+        public void TransitionToState(AbilityController controller)
         {
             _IsTrue = true;
             Exit(controller);
+
+            controller.ChangeToState(TrueState);
         }
 
-        public override void WhenTriggerIsTrue(ICharacter controller)
+        public override void WhenTriggerIsTrue(AbilityController controller)
         {
             CountTriggerIsTrue++;
             if (condition == TypeCondition.AND)
@@ -89,7 +91,7 @@ namespace KSkill
 
             TransitionToState(controller);
         }
-        public override void Init(ICharacter controller)
+        public override void Init(AbilityController controller)
         {
             CountTriggerIsTrue = 0;
             _IsTrue = false;
@@ -103,7 +105,7 @@ namespace KSkill
                 }
             }
         }
-        public override void Exit(ICharacter controller)
+        public override void Exit(AbilityController controller)
         {
             CountTriggerIsTrue = 0;
 
@@ -119,32 +121,62 @@ namespace KSkill
     /// Cái class này hoạt động như sau
     /// Check 
     /// </summary>
-    [CreateAssetMenu(menuName = "KSkill/State")]
+    [CreateAssetMenu(menuName = "KSkill/State/AbilityTrigger")]
     public class StateAbility : Ability
     {
-        #region Execute
-        [Header("Find target for Buff")]
-        public TargetBehaviour targetFinder;
-        [Header("Action Buff")]
-        public List<Action> Actions;
-        #endregion
+        #region Transition handler
+        [Header("Mấy cái tran này là trans thuộc dạng Update liên tục, không phụ thuộc vào bất kì callback nào")]
+        [Header("Transition này được controller upadte, chứ không phải chính state xử lí")]
+        public List<TransitionCondition> Transitions;
 
-        /// <summary>
-        /// enter --> processing --> exit
-        /// </summary>
-        #region State - 
-        public override void ExecuteEnterState()
+        [Header("Condition to change state of skill")]
+        public List<TransitionTrigger> TriggerTransitions;
+
+        public delegate void ChangeState(AbilityController controller);
+        public ChangeState TransitionToChangeState;
+        #endregion
+        public override Transition CheckTransition(ICharacter controller)
         {
-            if (this.Actions.Available())
+            int decisionSucceeded = 0;
+            if (this.Transitions.Available())
             {
-                for (int i = 0; i < this.Actions.Count; i++)
+                for (int i = 0; i < this.Transitions.Count; i++)
                 {
-                    this.Actions[i].Act(this.controller, this.targetFinder.Func(this.controller));
+                    decisionSucceeded += this.Transitions[i].IsTrue ? 1 : 0;
+
+                    if (decisionSucceeded > 0)
+                        return Transitions[i];
+                }
+            }
+
+            return null;
+        }
+
+        public override void Initialize(AbilityController controller)
+        {
+            base.Initialize(controller);
+
+            if (TriggerTransitions.Available())
+            {
+                foreach (var trans in TriggerTransitions)
+                {
+                    trans.Init(controller);
                 }
             }
         }
 
-        #endregion
+        public override void Exit(AbilityController controller)
+        {
+            base.Exit(controller);
+
+            if (this.TriggerTransitions.Available())
+            {
+                foreach (var tran in this.TriggerTransitions)
+                {
+                    tran.Exit(controller);
+                }
+            }
+        }
     }
 
 }

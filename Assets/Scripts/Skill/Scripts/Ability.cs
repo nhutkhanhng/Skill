@@ -4,12 +4,137 @@ using UnityEngine;
 
 namespace KSkill
 {
+    [System.Serializable]
+    public class ActionController
+    {
+
+        [System.NonSerialized]
+        protected int amount;
+
+        /// <summary>
+        /// Interval sẽ được coi là thơi gian CastPoint của một skill bình thường.
+        /// </summary>
+        [Header("Nếu mà Interval lớn hơn TotalTime hoặc cả 2 == 0 thì thực thi 1 lần đầu rồi thôi")]
+        public float interval;
+        public float TotalTime;
+
+        [Header("Find target for Buff")]
+        public TargetBehaviour targetFinder;
+        [Header("Action Buff")]
+        public List<Action> Actions;
+
+        protected bool _IsCompleted = false;
+        [System.NonSerialized]
+        protected float currentOverTime = 0f;
+
+        public bool IsCompleted
+        {
+            get { return _IsCompleted; }
+        }
+        public System.Action Done;
+
+        public virtual void DoActions(float deltaTime, ICharacter controller)
+        {
+            DoUpdate(deltaTime, controller);
+        }
+
+        public void Force(ICharacter owner, List<ICharacter> victims)
+        {
+            if (this.Actions.Available())
+            {
+                for (int i = 0; i < this.Actions.Count; i++)
+                {
+                    this.Actions[i].Act(owner, victims);
+                }
+            }
+        }
+
+        public virtual void DoAction(ICharacter controller)
+        {
+            if (this.Actions.Available())
+            {
+                for (int i = 0; i < this.Actions.Count; i++)
+                {
+                    this.Actions[i].Act(controller, this.targetFinder.Func(controller));
+                }
+            }
+        }
+        public virtual void Reset()
+        {
+            if (this.Actions.Available())
+            {
+                //foreach(var act in this.Actions)
+                //{
+                //    act.Reset
+                //}
+            }
+        }
+        protected void Completed()
+        {
+            Debug.LogError("Completed");
+            _IsCompleted = true;
+            Done?.Invoke();
+        }
+        public virtual void DoUpdate(float deltaTime, ICharacter controller)
+        {
+            if (this.interval > this.TotalTime 
+                || (this.interval == 0 && this.TotalTime == 0))
+            {
+                Debug.LogError(this.interval + "|||" + this.TotalTime);
+
+                DoAction(controller);
+                Completed();
+
+                return;
+            }
+            /// Làm kiểu này thì sẽ chắc chắn thực hiện đủ số lần cần làm.
+            if (Mathf.CeilToInt(this.currentOverTime / interval) >= ( amount + 1 )
+                && (this.currentOverTime - this.TotalTime) <= deltaTime)
+            {
+                amount++;
+                Debug.LogError(this.currentOverTime + "|||" + this.interval + "||| " + this.amount);
+
+                DoAction(controller);
+            }
+
+            this.currentOverTime += deltaTime;
+
+            if ((this.currentOverTime - this.TotalTime) > deltaTime)
+            {
+                Completed();
+            }
+        }
+    }
+
+
+    public class ActionOverTime : ActionController
+    { 
+        public override void DoUpdate(float deltaTime, ICharacter controller)
+        {
+            /// Làm kiểu này thì sẽ chắc chắn thực hiện đủ số lần cần làm.
+            if (Mathf.CeilToInt(this.currentOverTime / interval) >= amount
+                && (this.currentOverTime - this.TotalTime) <= deltaTime && (this.currentOverTime - this.TotalTime) <= 0)
+            {
+                amount++;
+
+                DoActions(deltaTime, controller);
+            }
+
+            this.currentOverTime += deltaTime;
+            if ((this.currentOverTime - this.TotalTime) > deltaTime)
+            {
+                Completed();
+            }
+        }
+    }
 
     [System.Serializable]
-    public abstract class Ability : ScriptableObject, IFSM
+    [CreateAssetMenu(menuName = "KSkill/State/Ability")]
+    public class Ability : ScriptableObject
     {
-        public ICharacter controller;
+        public BehaviourInState _Behaviour;
 
+        #region  Attribute ability controller
         public EState CurrentState = EState.Init;
 
         [System.NonSerialized]
@@ -20,68 +145,109 @@ namespace KSkill
             get { return m_Progress; }
 
         }
-        public abstract void ExecuteEnterState();
-        public virtual void EnterState()
-        {
-            ExecuteEnterState();
-        }
 
-        public virtual void ExitState()
-        {
+        #endregion
 
-        }
-
-        public virtual void Procesing()
-        {
-
-        }
-
-        public List<Interup> Interups;
+        #region Interrupts
+        public List<Interrupt> Interupts;
 
         public void InitInterups(ICharacter controller)
         {
-            foreach (var exception in Interups)
+            foreach (var exception in Interupts)
             {
                 exception.Init(this);
             }
         }
-
-        #region Transition handler
-        [Header("Condition to change state of skill")]
-        public List<TransitionTrigger> Transitions;
-
-        public delegate void ChangeState(AbilityController controller);
-        public ChangeState TransitionToChangeState;
         #endregion
+       
+        #region Actions
+        public List<ActionController> Actions;
+        protected int counterActionComplete;
 
-        public virtual void Initialize(ICharacter controller)
+        public virtual void DoActions(AbilityController controller, float deltaTime)
         {
-            this.CurrentState = EState.Init;
-
-            this.controller = controller;
-
-            if (Transitions.Available())
+            if (this.Actions.Available())
             {
-                foreach (var trans in Transitions)
+                for (int i = 0; i < this.Actions.Count; i++)
                 {
-                    trans.Init(controller);
+                    if(this.Actions[i].IsCompleted == false)
+                        this.Actions[i].DoActions(deltaTime, controller._Owner);
                 }
             }
         }
-        public virtual void TriggerAbility() { }
-
-        public virtual void DoUpdate(ICharacter controller)
+        #endregion
+        protected void CounterActionWhenCompleted()
         {
-            // TransitionToState(controller);
+            counterActionComplete++;
 
-            // Do Something
-            Procesing();
+            if (this.counterActionComplete == this.Actions.Count)
+            {
+                this._IsCompleted = true;
+            }
         }
 
-        public void EnterState(ICharacter controller)
+        protected void CheckAllActions(AbilityController controller)
         {
+            if(this._IsCompleted)
+            {
+                controller.ChangeToState(null);
+            }
+        }
+        public virtual void Initialize(AbilityController controller)
+        {
+            this.CurrentState = EState.Init;
+            counterActionComplete = 0;
+
+            if(this._Behaviour)
+            {
+                this._Behaviour.onCharacter = controller._Owner as CCharacter;
+            }
+
+            if (this.Actions.Available())
+            {
+                foreach(var act in this.Actions)
+                {
+                    act.Done += CounterActionWhenCompleted;
+                }
+            }
+        }
+
+        public virtual void EnterState(AbilityController controller)
+        {
+            this.CurrentState = EState.Enter;
             Initialize(controller);
-            EnterState();
+            _Behaviour?.Enter();
+        }
+
+        public virtual void DoUpdate(AbilityController controller, float deltaTime)
+        {
+            DoActions(controller, deltaTime);
+
+            _Behaviour?.DoUpdate(deltaTime);
+        }
+
+        public virtual Transition CheckTransition(ICharacter controller)
+        {
+            return null;
+        }
+        
+        protected bool _IsCompleted;
+        public bool IsCompleted
+        {
+            get { return _IsCompleted; }
+        }
+        // Reset All Transition
+        public virtual void Exit(AbilityController controller)
+        {
+            _Behaviour?.Exit();
+
+            if (this.Actions.Available())
+            {
+                foreach (var act in this.Actions)
+                {
+                    act.Reset();
+                }
+            }
         }
     }
 

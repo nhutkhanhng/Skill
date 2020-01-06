@@ -11,6 +11,8 @@ namespace KSkill
         public float HP = 500;
         public override void Act(ICharacter controller, List<ICharacter> targetBehaviour)
         {
+            Debug.LogError("Do buff");
+
             if (targetBehaviour.Available())
             {
                 foreach (var target in targetBehaviour)

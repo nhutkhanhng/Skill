@@ -4,19 +4,25 @@ using UnityEngine;
 
 namespace KSkill
 {
-    public abstract class DecisionTrigger : ScriptableObject
+    public abstract class DecisionTrigger<Controller> : ScriptableObject
+        where Controller : AbilityController
     {
         protected int Counter;
 
-        public System.Action<ICharacter> TrueRaise;
-        public abstract void Init(ICharacter controller);
-        public abstract bool Decide(ICharacter controller);
-        public abstract void Exit(ICharacter controller);
+        public System.Action<Controller> TrueRaise;
+        public abstract void Init(Controller controller);
+        public abstract bool Decide(Controller controller);
+        public abstract void Exit(Controller controller);
 
         public virtual void Reset()
         {
             Counter = 0;
             TrueRaise = null;
         }
+    }
+
+    public abstract class SkillDecisionTrigger : DecisionTrigger<AbilityController>
+    {
+
     }
 }

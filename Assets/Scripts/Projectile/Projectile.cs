@@ -10,6 +10,8 @@ public class Projectile
     public System.Action<List<ICharacter>> OnHit;
     public System.Action OnDestroy;
 
+    public ICharacter owner;
+
     [SerializeField]
     public LinearTrajectory path;
 
@@ -41,10 +43,11 @@ public class Projectile
 
     //    DoLaunch();
     //}
-    public void OnUpdate() { Update(); }
-    public void Update()
+    public void OnUpdate(float deltaTime) { Update(deltaTime); }
+
+    public void Update(float deltaTime)
     {
-        timeStamp = Time.deltaTime;
+        timeStamp += deltaTime;
         this.beAdd.transform.position = path.Calculate(this.timeStamp);
     }
 }

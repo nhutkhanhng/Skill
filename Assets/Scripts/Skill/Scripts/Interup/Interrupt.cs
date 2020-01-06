@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace KSkill
 {
-    public abstract class Interup : ScriptableObject
+    public abstract class Interrupt : ScriptableObject
     {
         public Ability ofSkill;
 

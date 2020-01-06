@@ -5,7 +5,7 @@ using UnityEngine;
 namespace KSkill
 {
     [CreateAssetMenu(menuName = "KSkill/Decision/HPTriggerDecision")]
-    public class HPTriggerDecision : DecisionTrigger
+    public class HPTriggerDecision : SkillDecisionTrigger
     {
         [SerializeField]
         public enum RelativeHP
@@ -18,36 +18,39 @@ namespace KSkill
         public RelativeHP Relative = RelativeHP.Smaller;
         public float Percent = 10;
 
-        public override bool Decide(ICharacter controller)
+        public override bool Decide(AbilityController controller)
         {
-            if(Mathf.Sign(controller.CurrentHpPercent - Percent) == ((float)this.Relative))
+            Debug.LogError((Mathf.Sign(controller._Owner.CurrentHpPercent /*- Percent*/)
+                /* == ((float)this.Relative))*/));
+
+            if(Mathf.Sign(controller._Owner.CurrentHpPercent - Percent) == ((float)this.Relative))
             {
                 this.Counter++;
                 if (this.Counter == 1)
                 {
                     TrueRaise?.Invoke(controller);
                 }
-
+                Debug.LogError("TRUE");
                 return true;
             }
 
             return false;
         }
 
-        public override void Init(ICharacter controller)
+        public override void Init(AbilityController controller)
         {
             this.Reset();
 
-            if (controller is CCharacter)
+            if (controller._Owner is CCharacter)
             {
-                ((CCharacter)controller).OnHPChange += () =>
+                ((CCharacter)controller._Owner).OnHPChange += () =>
                 {
                     Decide(controller);
                 };
             }
         }
 
-        public override void Exit(ICharacter controller)
+        public override void Exit(AbilityController controller)
         {
             
         }

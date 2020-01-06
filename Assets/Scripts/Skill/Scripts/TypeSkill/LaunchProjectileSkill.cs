@@ -5,7 +5,7 @@ using UnityEngine;
 namespace KSkill
 {
     [CreateAssetMenu(menuName = "KSkill/Projectile/SingleProjectile")]
-    public class LaunchProjectileSkill : Ability
+    public class LaunchProjectileSkill : StateAbility
     {
         [Header("When projectile hit target")]
         public List<Action> OnHit;
@@ -17,7 +17,7 @@ namespace KSkill
         [Header("Just Editor -- for init")]
         [SerializeField] public Projectile projectile;
 
-        [HideInInspector]public Projectile _Projectile;
+        [HideInInspector] public Projectile _Projectile;
         protected Projectile CreatePrjectile()
         {
             //return Object.Instantiate(projectile);
@@ -27,41 +27,60 @@ namespace KSkill
 
         protected void OnProjectileHit(List<ICharacter> targets)
         {
-            if (this.OnHit.Available())
+            for (int i = 0; i < this.Actions.Count; i++)
             {
-                for(int i = 0; i < this.OnHit.Count; i++)
+                this.Actions[i].Force(_Projectile.owner, targets);
+
+            }
+
+        }
+
+        public override void Initialize(AbilityController controller)
+        {
+            this.CurrentState = EState.Init;
+
+            if (TriggerTransitions.Available())
+            {
+                foreach (var trans in TriggerTransitions)
                 {
-                    this.OnHit[i].Act(this.controller, targets);
+                    trans.Init(controller);
                 }
             }
         }
 
-        public override void EnterState()
+        protected void EndStateWhenProjectileBeDestroyed()
         {
+            this._IsCompleted = true;
+        }
+        public override void EnterState(AbilityController controller)
+        {
+            base.EnterState(controller);
+
             _Projectile = CreatePrjectile() as Projectile;
+            _Projectile.owner = controller._Owner;
 
             _Projectile.OnHit += OnProjectileHit;
-            _Projectile.OnDestroy += ExitState;
+            _Projectile.OnDestroy += EndStateWhenProjectileBeDestroyed;
 
-            _Projectile.path.Init(this.controller.Position, this.EndPoint);
+            _Projectile.path.Init(controller._Owner.Position, this.EndPoint);
 
             _Projectile.DoLaunch();
         }
 
-        public override void ExitState()
+        public override void Exit(AbilityController controller)
         {
+            base.Exit(controller);
             projectile.OnHit -= OnProjectileHit;
-            projectile.OnDestroy -= ExitState;
+            projectile.OnDestroy -= EndStateWhenProjectileBeDestroyed;
         }
 
-        public override void Procesing()
+        public override void DoActions(AbilityController controller, float deltaTime)
         {
-            projectile.OnUpdate();
+            // nothing
         }
-
-        public override void ExecuteEnterState()
+        public override void DoUpdate(AbilityController controller, float deltaTime)
         {
-            throw new System.NotImplementedException();
+            projectile.OnUpdate(deltaTime);
         }
     }
 }
