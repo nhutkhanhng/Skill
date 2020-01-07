@@ -153,10 +153,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 0
+  skillCOntroller: {fileID: 0}
   _currentHP: 50
-  _test: 0
   _IdTeam: 1
   _Ability: {fileID: 0}
+  _Fury: 0
+  maxHP: 0
 --- !u!135 &135093265
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -410,8 +412,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: 0.0068037002, y: 0.89558786, z: -0.44462156, w: 0.013704226}
-  m_LocalPosition: {x: -3.6451268, y: 15.191722, z: 10.156471}
+  m_LocalRotation: {x: -0.0898979, y: 0.89437073, z: -0.3853337, w: -0.20865601}
+  m_LocalPosition: {x: 9.10931, y: 25.478882, z: 38.43909}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -431,6 +433,7 @@ GameObject:
   - component: {fileID: 785374751}
   - component: {fileID: 785374750}
   - component: {fileID: 785374749}
+  - component: {fileID: 785374755}
   m_Layer: 0
   m_Name: Caster
   m_TagString: Untagged
@@ -451,9 +454,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: {fileID: 0}
+  _InitState: {fileID: 11400000, guid: 647eae882bf7fdf40b2fcf46f9f78015, type: 2}
   InitState: {fileID: 0}
-  endState: {fileID: 11400000, guid: 16226330ef7a29f46bca0207c3f414b5, type: 2}
-  _InitState: {fileID: 11400000, guid: ad694e87f5cc0e2499223b60dc57ab4e, type: 2}
+  endState: {fileID: 11400000, guid: 3dbf52e1242b89a458c88c1a99ff1d54, type: 2}
 --- !u!114 &785374750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -467,10 +470,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 1
+  skillCOntroller: {fileID: 11400000, guid: b56ca7605ff4dff4b9d1368776237f2b, type: 2}
   _currentHP: 59
-  _test: 0
   _IdTeam: 0
   _Ability: {fileID: 785374749}
+  _Fury: 0
+  maxHP: 100
 --- !u!135 &785374751
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -501,7 +506,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: b8d9f62fecc56964d9ffc1091cec3bb6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -544,6 +549,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &785374755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 785374748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 243150d9b5fe0fe4c8feef7a0d1b660a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cc:
+    _Value: 5
+  normalize:
+    factor: 100
+    flat: 10000
+    normalizeTime: 0
+  test: {fileID: 11400000, guid: e87eafaec2af01541b436215175c0059, type: 2}
 --- !u!1 &1579401821
 GameObject:
   m_ObjectHideFlags: 0
@@ -577,10 +601,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 0
+  skillCOntroller: {fileID: 0}
   _currentHP: 50
-  _test: 0
   _IdTeam: 1
   _Ability: {fileID: 0}
+  _Fury: 0
+  maxHP: 0
 --- !u!135 &1579401823
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -687,10 +713,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 0
+  skillCOntroller: {fileID: 0}
   _currentHP: 50
-  _test: 0
   _IdTeam: 1
   _Ability: {fileID: 0}
+  _Fury: 0
+  maxHP: 0
 --- !u!135 &2103697048
 SphereCollider:
   m_ObjectHideFlags: 0

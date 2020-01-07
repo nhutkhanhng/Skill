@@ -9,6 +9,6 @@ namespace KSkill
     /// </summary>
     public abstract class Action : ScriptableObject
     {
-        public abstract void Act(ICharacter controller, List<ICharacter> targetBehaviour);
+        public abstract void Act(ICharacter controller, List<ICharacter> targetBehaviour, IVisitor extra = null);
     }
 }

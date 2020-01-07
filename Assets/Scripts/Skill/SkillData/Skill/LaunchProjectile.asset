@@ -12,16 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1117a3856da673a4d94799fe7acbbfbd, type: 3}
   m_Name: LaunchProjectile
   m_EditorClassIdentifier: 
-  Interups: []
+  _Behaviour: {fileID: 0}
+  CurrentState: 0
+  Interupts: []
+  Actions: []
   Transitions: []
+  TriggerTransitions: []
   OnHit:
-  - {fileID: 11400000, guid: 460ba14a3594511448fe258691381087, type: 2}
+  - {fileID: 0}
   OnDestroy: []
   EndPoint: {x: -9, y: 0, z: 20}
   projectile:
     path:
       Data:
-        m_Duration: 10
+        m_Duration: 1000
         m_Height: 0
       m_Begin: {x: -7.12, y: 0, z: 0}
       m_End: {x: -9, y: 0, z: 20}

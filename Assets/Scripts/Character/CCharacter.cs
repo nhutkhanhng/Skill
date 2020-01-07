@@ -18,6 +18,8 @@ public partial class CCharacter : MonoBehaviour, ICharacter, ISkillFunction
 {
     public bool isPlayer;
 
+    public BehaviourInState skillCOntroller;
+
     [SerializeField]
     protected float _currentHP;
     public float CurrentHp
@@ -67,6 +69,12 @@ public partial class CCharacter : MonoBehaviour, ICharacter, ISkillFunction
     private void Awake()
     {
         CCharacterManager.Instance.AllCharacter.Add(this);
+
+        if (this.skillCOntroller)
+        {
+            this.skillCOntroller.onCharacter = this;
+            this.skillCOntroller?.Enter();
+        }
     }
 
     public bool IsAlive()
@@ -79,15 +87,17 @@ public partial class CCharacter : MonoBehaviour, ICharacter, ISkillFunction
         if (_Ability)
         {
             _Ability._Owner = this;
-            _Ability.Init();
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (_Ability)
-            _Ability.DoUpdate(Time.deltaTime);
+        if (skillCOntroller)
+            skillCOntroller.DoUpdate(_Ability, Time.deltaTime);
+
+        //if (_Ability)
+        //    _Ability.DoUpdate(Time.deltaTime);
 
         if (Input.GetKeyDown(KeyCode.K))
         {

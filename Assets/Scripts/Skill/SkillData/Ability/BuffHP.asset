@@ -12,6 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88b4e7a1db687084b96c945ee3175ca8, type: 3}
   m_Name: BuffHP
   m_EditorClassIdentifier: 
+  _Behaviour: {fileID: 11400000, guid: b56ca7605ff4dff4b9d1368776237f2b, type: 2}
   CurrentState: 0
   Interupts: []
-  Actions: []
+  Actions:
+  - interval: 1
+    TotalTime: 1
+    targetFinder: {fileID: 11400000, guid: 44f86be2de918f04695d546dbecdccf1, type: 2}
+    Actions:
+    - {fileID: 11400000, guid: e87eafaec2af01541b436215175c0059, type: 2}

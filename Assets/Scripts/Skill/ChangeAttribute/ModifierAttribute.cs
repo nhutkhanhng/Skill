@@ -21,7 +21,7 @@ namespace KSkill
     {
         public List<AttributeToChange> PropertiesChanged = new List<AttributeToChange>();
 
-        public override void Act(ICharacter controller, List<ICharacter> targetBehaviour)
+        public override void Act(ICharacter controller, List<ICharacter> targetBehaviour, IVisitor extra = null)
         {
             if (targetBehaviour.Available())
             {

@@ -223,7 +223,7 @@ namespace KSkill
         {
             DoActions(controller, deltaTime);
 
-            _Behaviour?.DoUpdate(deltaTime);
+            _Behaviour?.DoUpdate(controller, deltaTime);
         }
 
         public virtual Transition CheckTransition(ICharacter controller)
