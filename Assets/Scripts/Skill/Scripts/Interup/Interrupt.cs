@@ -7,21 +7,18 @@ namespace KSkill
 {
     public abstract class Interrupt : ScriptableObject
     {
-        public Ability ofSkill;
+        [HideInInspector]
+        public Skill ofSkill;
 
         public Func<bool, ICharacter> IsInterup;
+        public System.Action whenTrigger;
 
-        public void Init(Ability skill)
+        public virtual void Init(Skill skill)
         {
             this.ofSkill = skill;
-
-            //skill.controller
         }
 
-        public bool Is()
-        {
-            return false;
-        }
+        public abstract bool IsTrigger(Skill _kill);
 
     }
 }

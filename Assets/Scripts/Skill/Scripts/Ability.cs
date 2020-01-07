@@ -146,17 +146,17 @@ namespace KSkill
 
         #endregion
 
-        #region Interrupts
-        public List<Interrupt> Interupts;
+        //#region Interrupts
+        //public List<Interrupt> Interupts;
 
-        public void InitInterups(ICharacter controller)
-        {
-            foreach (var exception in Interupts)
-            {
-                exception.Init(this);
-            }
-        }
-        #endregion
+        //public void InitInterups(ICharacter controller)
+        //{
+        //    foreach (var exception in Interupts)
+        //    {
+        //        exception.Init(this);
+        //    }
+        //}
+        //#endregion
        
         #region Actions
         public List<ActionController> Actions;

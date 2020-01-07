@@ -37,13 +37,18 @@ public interface IPerformSkill
 
 public class Skill : MonoBehaviour
 {
-    public AbilityController _Aility;
+    public CCharacter owner;
 
-
+    public AbilityController _Ability;
+    
     public CBehaviour currentBehaviour;
 
     public CastSkill Casting;
-    public BehaviourInState Perform;
+
+    public bool IsPerformWhenInterrupt;
+    public bool CanLaunchWhenPerform;
+
+    public PerformSkill Perform;
     public void TransitionToBehaviour(CBehaviour next)
     {
         if (next == null)
@@ -58,19 +63,56 @@ public class Skill : MonoBehaviour
         }
     }
 
+    public void Interrupt()
+    {
+        Debug.LogError("Interrupt");
 
+        if (this.currentBehaviour == Casting)
+        {
+
+            Debug.LogError(this.currentBehaviour.Progress());
+
+            if (this.IsPerformWhenInterrupt)
+            {
+                this.currentBehaviour.Force(_Ability);
+                ChangeToPerform();
+            }
+            else
+                this.SkillComplete();
+        }
+        else
+        if(this.currentBehaviour == Perform)
+        {
+            if(CanLaunchWhenPerform)
+            {
+                this.currentBehaviour.Force(_Ability);
+            }
+
+            this.SkillComplete();
+        }
+    }
     public void Init()
     {
-        if( Casting != null)
+        if (_Ability != null)
+        {
+            if (owner != null)
+            {
+                this._Ability._Owner = owner;
+            }
+        }
+
+        if ( Casting != null)
         {
             Casting.DoExit = null;
             Casting.DoExit += ChangeToPerform;
+            //Casting.DoInterrupt += Interrupt;
         }
 
         if (Perform != null)
         {
             Perform.DoExit = null;
             Perform.DoExit += SkillComplete;
+            //Perform.DoInterrupt += Interrupt;
         }
     }
 
@@ -95,7 +137,6 @@ public class Skill : MonoBehaviour
     public void SkillComplete()
     {
         _isCompleted = true;
-
         this.currentBehaviour = null;
         Debug.LogError("Completed");
     }
@@ -116,13 +157,17 @@ public class Skill : MonoBehaviour
     {
         Exit();
     }
-    // Update is called once per frame
-    void Update()
+
+    public void DoUpdate(float deltaTime)
     {
         if (this.currentBehaviour != null)
         {
-            Debug.Log(currentBehaviour.GetType());
-            this.currentBehaviour.DoUpdate(this._Aility, Time.deltaTime);
+            this.currentBehaviour.DoUpdate(this._Ability, deltaTime);
         }
+    }
+    // Update is called once per frame
+    void Update()
+    {
+        DoUpdate(Time.deltaTime);
     }
 }

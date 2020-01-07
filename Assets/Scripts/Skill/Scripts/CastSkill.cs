@@ -130,7 +130,7 @@ public class CastSkill : CBehaviour
     }
     public void Set()
     {
-        normalize.normalizeTime = cc.normalizeTime = this.Progess();
+        normalize.normalizeTime = cc.normalizeTime = this.Progress();
     }
     public override void Enter(Skill skill)
     {

@@ -62,8 +62,27 @@ public partial class CCharacter : MonoBehaviour, ICharacter, ISkillFunction
         set { _IdTeam = value; }
     }
 
-    public AbilityController _Ability;
+    [SerializeField]
+    protected bool _Stun;
 
+    public bool Stun
+    {
+        get { return _Stun; }
+
+        set
+        {
+            _Stun = value;
+
+            if (_Stun == true)
+                OnStuned();
+        }
+    }
+
+    [ContextMenu("Stun")]
+    public void Stunnnnn()
+    {
+        this.Stun = true;
+    }
     private void Awake()
     {
         CCharacterManager.Instance.AllCharacter.Add(this);
@@ -72,14 +91,6 @@ public partial class CCharacter : MonoBehaviour, ICharacter, ISkillFunction
     public bool IsAlive()
     {
         return true;
-    }
-    // Start is called before the first frame upda  te
-    void Start()
-    {
-        if (_Ability)
-        {
-            _Ability._Owner = this;
-        }
     }
 
     // Update is called once per frame
@@ -104,5 +115,12 @@ public partial class CCharacter : MonoBehaviour, ICharacter, ISkillFunction
     public void OnHpChanged()
     {
         OnHPChange?.Invoke();
+    }
+
+    public void OnStuned()
+    {
+        Debug.LogError("OnStuned");
+
+        OnStun?.Invoke();
     }
 }

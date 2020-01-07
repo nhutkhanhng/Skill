@@ -8,6 +8,12 @@ public partial class CCharacter
     public event Action<CCharacter> OnKilled;
     public event Action<CCharacter> OnKill;
 
+    public event Action OnSleep;
+    public event Action OnStun;
+    public event Action OnSilient;
+    public event Action Root;
+
+
     public event Action OnHPChange;
     public event Action OnFuryChange;
 

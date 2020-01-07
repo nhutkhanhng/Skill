@@ -153,10 +153,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 0
-  skillCOntroller: {fileID: 0}
   _currentHP: 50
   _IdTeam: 1
-  _Ability: {fileID: 0}
+  _Stun: 0
   _Fury: 0
   maxHP: 0
 --- !u!135 &135093265
@@ -470,10 +469,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 1
-  skillCOntroller: {fileID: 11400000, guid: b56ca7605ff4dff4b9d1368776237f2b, type: 2}
   _currentHP: 59
   _IdTeam: 0
-  _Ability: {fileID: 785374749}
+  _Stun: 0
   _Fury: 0
   maxHP: 100
 --- !u!135 &785374751
@@ -558,16 +556,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 785374748}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 243150d9b5fe0fe4c8feef7a0d1b660a, type: 3}
+  m_Script: {fileID: 11500000, guid: 0be425847f7ac2c4a88e5b683c73c755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cc:
-    _Value: 5
-  normalize:
-    factor: 100
-    flat: 10000
-    normalizeTime: 1
-  test: {fileID: 11400000, guid: e87eafaec2af01541b436215175c0059, type: 2}
+  owner: {fileID: 785374750}
+  _Ability: {fileID: 785374749}
+  Casting:
+    Interupts:
+    - {fileID: 11400000, guid: eb2bc808f3bdab14e9abcf11241eabf5, type: 2}
+    interval: 1
+    TotalTime: 1
+    normalize:
+      factor: 0
+      flat: 0
+      normalizeTime: 0
+    cc:
+      factor: 0
+      flat: 0
+      normalizeTime: 0
+  IsPerformWhenInterrupt: 1
+  CanLaunchWhenPerform: 1
+  Perform:
+    Interupts:
+    - {fileID: 11400000, guid: eb2bc808f3bdab14e9abcf11241eabf5, type: 2}
+    interval: 5
+    TotalTime: 10
+    onCharacter: {fileID: 785374750}
 --- !u!1 &1579401821
 GameObject:
   m_ObjectHideFlags: 0
@@ -601,10 +615,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 0
-  skillCOntroller: {fileID: 0}
   _currentHP: 50
   _IdTeam: 1
-  _Ability: {fileID: 0}
+  _Stun: 0
   _Fury: 0
   maxHP: 0
 --- !u!135 &1579401823
@@ -713,10 +726,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPlayer: 0
-  skillCOntroller: {fileID: 0}
   _currentHP: 50
   _IdTeam: 1
-  _Ability: {fileID: 0}
+  _Stun: 0
   _Fury: 0
   maxHP: 0
 --- !u!135 &2103697048

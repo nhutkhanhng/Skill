@@ -7,6 +7,21 @@ using KSkill;
 //[System.Serializable]
 public class CBehaviour
 {
+
+    #region Interrupts
+    public List<Interrupt> Interupts;
+
+    public void InitInterups(Skill controller)
+    {
+        Debug.LogError(this.GetType());
+
+        foreach (var exception in Interupts)
+        {
+            exception.Init(controller);
+        }
+    }
+    #endregion
+
     public float interval;
     public float TotalTime;
 
@@ -22,7 +37,10 @@ public class CBehaviour
     public virtual void Enter(Skill _skill)
     {
         Reset();
+
+        InitInterups(_skill);
     }
+
 
     public virtual void Reset()
     {
@@ -31,8 +49,11 @@ public class CBehaviour
         this._isCompleted = false;
     }
 
-    public float Progess()
+    public float Progress()
     {
+        if (this.TotalTime == 0)
+            return 0;
+
         return Mathf.Clamp01(this.currentOverTime / this.TotalTime);
 
     }
@@ -46,6 +67,16 @@ public class CBehaviour
         }
     }
 
+    public System.Action DoInterrupt;
+    public virtual void Force(AbilityController controller)
+    {
+        DoAction(controller);
+        IsCompleted = true;
+
+        Debug.LogError("FOrce");
+        DoInterrupt?.Invoke();
+        // Không sử dụng hàm complete vì nó đã xong đâu. Chỉ là quit thôi.
+    }
     public virtual void DoUpdate(AbilityController controller, float deltaTime)
     {
         if (_isCompleted)
@@ -93,7 +124,7 @@ public class CBehaviour
 }
 //[CreateAssetMenu(menuName = "KSkill/Behaviour/Behaviour")]
 [System.Serializable]
-public class BehaviourInState : CBehaviour
+public class PerformSkill : CBehaviour
 {
     public CCharacter onCharacter;
 
@@ -128,10 +159,16 @@ public class BehaviourInState : CBehaviour
         }
     }
 
+    public override void Force(AbilityController controller)
+    {
+        base.Force(controller);
+        Completed();
+    }
     public override void Enter(Skill _skill)
     {
         base.Enter(_skill);
 
-        _skill.gameObject.GetComponent<Renderer>().sharedMaterial.color = Color.white;
+        _skill.gameObject.GetComponent<Renderer>().sharedMaterial.color = Color.black;
     }
+
 }
