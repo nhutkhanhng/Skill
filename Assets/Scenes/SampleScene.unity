@@ -566,7 +566,7 @@ MonoBehaviour:
   normalize:
     factor: 100
     flat: 10000
-    normalizeTime: 0
+    normalizeTime: 1
   test: {fileID: 11400000, guid: e87eafaec2af01541b436215175c0059, type: 2}
 --- !u!1 &1579401821
 GameObject:

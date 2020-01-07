@@ -115,19 +115,31 @@ public class DefenseNormalize : ExtraNormalize
 }
 
 
-[CreateAssetMenu(menuName = "KSkill/Behaviour/Casting")]
-public class CastSkill : MonoBehaviour
+//[CreateAssetMenu(menuName = "KSkill/Behaviour/Casting")]
+[System.Serializable]
+public class CastSkill : CBehaviour
 {
-    public CCValue cc;
     public DamageNormalize normalize;
+    public CCNormalize cc;
 
-    public KSkill.Action test;
-    public ICharacter c = null;
-    public List<ICharacter> t;
+    public List<IVisitor> modifier = new List<IVisitor>();
 
-    [ContextMenu("TEST")]
-    public void TestExe()
+    public CastSkill()
     {
-        test.Act(c,t,normalize);
+        modifier = new List<IVisitor>() { normalize, cc};
+    }
+    public void Set()
+    {
+        normalize.normalizeTime = cc.normalizeTime = this.Progess();
+    }
+    public override void Enter(Skill skill)
+    {
+        base.Enter(skill);
+        skill.gameObject.GetComponent<Renderer>().sharedMaterial.color = Color.red;
+    }
+    protected override void DoAction(AbilityController controller)
+    {
+        Set();
+        controller.dameModifyerByCasting = this.modifier;        
     }
 }

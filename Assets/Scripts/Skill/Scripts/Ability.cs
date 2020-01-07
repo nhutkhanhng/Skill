@@ -132,8 +132,6 @@ namespace KSkill
     [CreateAssetMenu(menuName = "KSkill/State/Ability")]
     public class Ability : ScriptableObject
     {
-        public BehaviourInState _Behaviour;
-
         #region  Attribute ability controller
         public EState CurrentState = EState.Init;
 
@@ -198,11 +196,6 @@ namespace KSkill
             this.CurrentState = EState.Init;
             counterActionComplete = 0;
 
-            if(this._Behaviour)
-            {
-                this._Behaviour.onCharacter = controller._Owner as CCharacter;
-            }
-
             if (this.Actions.Available())
             {
                 foreach(var act in this.Actions)
@@ -216,14 +209,11 @@ namespace KSkill
         {
             this.CurrentState = EState.Enter;
             Initialize(controller);
-            _Behaviour?.Enter();
         }
 
         public virtual void DoUpdate(AbilityController controller, float deltaTime)
         {
             DoActions(controller, deltaTime);
-
-            _Behaviour?.DoUpdate(controller, deltaTime);
         }
 
         public virtual Transition CheckTransition(ICharacter controller)
@@ -239,8 +229,6 @@ namespace KSkill
         // Reset All Transition
         public virtual void Exit(AbilityController controller)
         {
-            _Behaviour?.Exit();
-
             if (this.Actions.Available())
             {
                 foreach (var act in this.Actions)

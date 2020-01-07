@@ -49,6 +49,9 @@ public class AbilityController : MonoBehaviour
 {
     // Owner có thể null
     public ICharacter _Owner;
+
+
+    public List<IVisitor> dameModifyerByCasting;
     #region Ability Executor
     public Ability currentState;
     [Space]

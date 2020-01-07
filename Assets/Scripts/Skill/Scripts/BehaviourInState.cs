@@ -4,18 +4,9 @@ using UnityEngine;
 
 using KSkill;
 
-[CreateAssetMenu(menuName = "KSkill/Behaviour/Behaviour")]
-public class BehaviourInState : ScriptableObject
+//[System.Serializable]
+public class CBehaviour
 {
-    public CCharacter onCharacter;
-
-    /// <summary>
-    /// Cái này đang bị confuse giữa việc thiết kế.
-    /// Nên dùng một Ability có khả năng Overtime.
-    /// Hay sử dụng Behaviour gọi Ability theo interval ????
-    /// I don't know, 
-    /// </summary>
-    public Ability abilityUsed;
     public float interval;
     public float TotalTime;
 
@@ -24,32 +15,38 @@ public class BehaviourInState : ScriptableObject
 
     [System.NonSerialized]
     protected int amount;
-    protected void DoAction(AbilityController controller)
+    protected virtual void DoAction(AbilityController controller)
     {
-        Debug.LogError("DoAction");
         controller.Init();
     }
-    public void Enter()
+    public virtual void Enter(Skill _skill)
     {
         Reset();
-        this.onCharacter.GetComponent<Renderer>().sharedMaterial.color = Color.red;
     }
 
-    public void Reset()
+    public virtual void Reset()
     {
         this.amount = 0;
         this.currentOverTime = 0;
         this._isCompleted = false;
     }
 
+    public float Progess()
+    {
+        return Mathf.Clamp01(this.currentOverTime / this.TotalTime);
+
+    }
     protected bool _isCompleted;
-    public bool IsCompleted { get { return _isCompleted; }
-        set {
+    public bool IsCompleted
+    {
+        get { return _isCompleted; }
+        set
+        {
             _isCompleted = value;
         }
     }
 
-    public void DoUpdate(AbilityController controller, float deltaTime)
+    public virtual void DoUpdate(AbilityController controller, float deltaTime)
     {
         if (_isCompleted)
             return;
@@ -57,8 +54,6 @@ public class BehaviourInState : ScriptableObject
         if (this.interval > this.TotalTime
               || (this.interval == 0 && this.TotalTime == 0))
         {
-            Debug.LogError(this.interval + "|||" + this.TotalTime);
-
             DoAction(controller);
             Completed();
 
@@ -88,9 +83,55 @@ public class BehaviourInState : ScriptableObject
 
         Exit();
     }
-    public void Exit()
+
+
+    public System.Action DoExit;
+    public virtual void Exit()
     {
-        this.onCharacter.GetComponent<Renderer>().sharedMaterial.color = Color.white;
+        DoExit?.Invoke();
     }
-    
+}
+//[CreateAssetMenu(menuName = "KSkill/Behaviour/Behaviour")]
+[System.Serializable]
+public class BehaviourInState : CBehaviour
+{
+    public CCharacter onCharacter;
+
+    public override void DoUpdate(AbilityController controller, float deltaTime)
+    {
+        if (_isCompleted)
+            return;
+
+        if (this.interval > this.TotalTime
+              || (this.interval == 0 && this.TotalTime == 0))
+        {
+            DoAction(controller);
+            Completed();
+
+            return;
+        }
+
+        if (Mathf.FloorToInt(this.currentOverTime / interval) >= (amount + 1)
+            && (this.currentOverTime - this.TotalTime) <= deltaTime)
+        {
+            // chưa biết có nên dùng không nữa.
+
+            DoAction(controller);
+            amount++;
+        }
+
+        this.currentOverTime += deltaTime;
+
+        if ((this.currentOverTime - this.TotalTime) > deltaTime)
+        {
+            Completed();
+        }
+    }
+
+    public override void Enter(Skill _skill)
+    {
+        base.Enter(_skill);
+
+        _skill.gameObject.GetComponent<Renderer>().sharedMaterial.color = Color.white;
+    }
 }
