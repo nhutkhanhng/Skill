@@ -561,6 +561,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   owner: {fileID: 785374750}
   _Ability: {fileID: 785374749}
+  Triggers:
+  - {fileID: 0}
   Casting:
     Interupts:
     - {fileID: 11400000, guid: eb2bc808f3bdab14e9abcf11241eabf5, type: 2}
